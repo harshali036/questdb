@@ -25,3 +25,27 @@ public class AuthExample {
         }
     }
 }
+import io.questdb.*;
+
+public class QuestDBExample {
+    public static void main(String[] args) throws Exception {
+        try (SqlExecutionContextImpl sqlExecutionContext = new SqlExecutionContextImpl(new DefaultExecutionContext())) {
+            // connect to QuestDB
+            try (QuestDbConnection connection = new QuestDbConnection()) {
+                connection.setUrl("jdbc:questdb:localhost:9000");
+                connection.setUsername("admin");
+                connection.setPassword("quest");
+                connection.setSqlExecutionContext(sqlExecutionContext);
+
+                // execute a SQL query
+                try (RecordCursor cursor = connection.execute("SELECT * FROM users")) {
+                    // iterate over the results
+                    while (cursor.hasNext()) {
+                        System.out.println(cursor.getRecord());
+                    }
+                }
+            }
+        }
+    }
+}
+
